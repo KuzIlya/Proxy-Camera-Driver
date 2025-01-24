@@ -107,7 +107,7 @@ static int vcam_mmap(struct file *file, struct vm_area_struct *vma)
         return -EIO;
     }
 
-    struct file_operations *real_fops = real_camera_file->f_op;
+    const struct file_operations *real_fops = real_camera_file->f_op;
     if (!real_fops->mmap) {
         pr_err("vcam_mmap: Real device does not support mmap\n");
         return -EINVAL;
@@ -130,7 +130,7 @@ static long vcam_handle_real_camera_ioctl(unsigned int cmd, unsigned long arg) {
         return -EIO;
     }
 
-    long ret = vfs_ioctl(real_camera_file, cmd, (void __user *)arg);
+    long ret = vfs_ioctl(real_camera_file, cmd, (unsigned long)arg);
     if (ret < 0) {
         pr_err("vcam_handle_real_camera_ioctl: IOCTL %u failed with error %ld\n", cmd, ret);
         return ret;
